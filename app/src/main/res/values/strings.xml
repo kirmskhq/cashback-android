@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Кэшбэк</string>
+
+    <!-- nav -->
+    <string name="nav_banks">Банки</string>
+    <string name="nav_categories">Категории</string>
+    <string name="nav_history">История</string>
+    <string name="nav_promos">Кэшбэк+</string>
+
+    <!-- common -->
+    <string name="back">Назад</string>
+    <string name="today">Сегодня</string>
+    <string name="cancel">Отмена</string>
+    <string name="add">Добавить</string>
+    <string name="create">Создать</string>
+    <string name="delete">Удалить</string>
+    <string name="prev_month">Предыдущий месяц</string>
+    <string name="next_month">Следующий месяц</string>
+
+    <!-- banks -->
+    <string name="cashback_count_one">%1$d кэшбэк</string>
+    <string name="cashback_count_few">%1$d кэшбэка</string>
+    <string name="cashback_count_many">%1$d кэшбэков</string>
+    <string name="cashback_count_none">Нет активных</string>
+    <string name="bank_detail_subtitle">Категории, по которым в этом месяце даёт повышенный кэшбэк</string>
+
+    <!-- bank picker / empty state -->
+    <string name="banks_empty_title">Выберите банки</string>
+    <string name="banks_empty_subtitle">В каких банках у вас есть карты? Добавьте их сюда, чтобы потом отслеживать кэшбэк по категориям.</string>
+    <string name="banks_empty_cta">Добавить банки</string>
+    <string name="banks_edit_action">Изменить список банков</string>
+    <string name="nav_banks_picker">Выбрать банки</string>
+    <string name="picker_search_placeholder">Поиск…</string>
+    <string name="picker_custom_section">Свои банки</string>
+    <string name="picker_add_custom">Добавить свой банк</string>
+    <string name="picker_custom_limit">Достигнут лимит: %1$d из 3 своих банков. Удалите один, чтобы добавить новый.</string>
+    <string name="custom_bank_title">Свой банк</string>
+    <string name="custom_bank_name_label">Название</string>
+    <string name="custom_bank_color_label">Цвет карточки</string>
+    <string name="custom_bank_preview_placeholder">Название банка</string>
+    <string name="bank_no_entries_title">Нет активных кэшбэков</string>
+    <string name="bank_no_entries_hint">Нажмите ＋, чтобы добавить новый</string>
+    <string name="empty_month">В этом месяце для этой карты ничего не добавлено</string>
+
+    <!-- categories -->
+    <string name="category_best_in_month">Где лучший кэшбэк в %1$s</string>
+    <string name="category_no_offers">нет активных предложений</string>
+    <string name="category_best_offer_hint">лучшее предложение в %1$s</string>
+    <string name="extra_banks_one">ещё %1$d банк даёт этот кэшбэк</string>
+    <string name="extra_banks_few">ещё %1$d банка дают этот кэшбэк</string>
+    <string name="extra_banks_many">ещё %1$d банков дают этот кэшбэк</string>
+    <string name="category_other_banks_none">Остальные банки в этом месяце по этой категории предложений не дают.</string>
+    <string name="delete_category_action">Удалить категорию «%1$s»</string>
+    <string name="delete_category_hint">Будут удалены все привязанные к ней кэшбэки за все месяцы.</string>
+
+    <!-- history -->
+    <string name="history_empty">В этом месяце записей нет</string>
+
+    <!-- dialogs -->
+    <string name="add_cashback_title">Добавить кэшбэк</string>
+    <string name="field_bank">Банк</string>
+    <string name="field_category">Категория</string>
+    <string name="field_percent">Процент</string>
+    <string name="percent_hint">Можно указывать дробное число, например 5,5</string>
+    <string name="new_category_option">＋ Новая категория…</string>
+    <string name="new_category_title">Новая категория</string>
+    <string name="field_name">Название</string>
+    <string name="field_emoji">Эмодзи</string>
+    <string name="emoji_hint">Откройте клавиатуру эмодзи и вставьте любой символ</string>
+    <string name="preview_label">Будет показано:</string>
+    <string name="entry_duplicate_error">Такая запись для этого месяца уже есть</string>
+    <string name="entry_invalid_percent">Введите корректный процент</string>
+
+    <!-- Categories chip-grid -->
+    <string name="cat_section_inactive">без предложений</string>
+
+    <!-- carry-forward banner on bank detail -->
+    <string name="carry_forward_title">В прошлом месяце (%1$s) было:</string>
+    <string name="carry_forward_action">Скопировать в этот месяц</string>
+
+    <!-- monthly reminder -->
+    <string name="reminder_channel_name">Ежемесячное напоминание</string>
+    <string name="reminder_channel_desc">Напоминание выбрать категории кэшбэка в банках</string>
+    <string name="reminder_title">🛎 Время выбрать кэшбэк</string>
+    <string name="reminder_body">Банки уже публикуют категории на следующий месяц. Откройте приложение и обновите.</string>
+
+    <!-- promos / Кэшбэк+ -->
+    <string name="promos_section_label">КЭШБЭК+</string>
+    <string name="promos_header_hint">Подборка карт, на которые сейчас есть промо-условия открытия. Откройте карточку, чтобы прочитать условия и перейти на сайт банка.</string>
+    <string name="promo_details_cta">Подробнее</string>
+    <string name="promo_terms_header">Условия и преимущества</string>
+    <string name="promo_open_in_browser">Открыть на сайте банка</string>
+    <string name="promos_empty">Пока нет предложений</string>
+
+    <!-- built-in category names (keys referenced by Category.nameResKey) -->
+    <string name="cat_education">Образование</string>
+    <string name="cat_supermarket">Супермаркеты</string>
+    <string name="cat_all_purchases">Все покупки</string>
+    <string name="cat_fastfood">Фастфуд</string>
+    <string name="cat_restaurant">Рестораны</string>
+    <string name="cat_books">Книги</string>
+    <string name="cat_drugstore">Аптеки</string>
+    <string name="cat_sports_goods">Спорттовары</string>
+    <string name="cat_taxi">Такси</string>
+    <string name="cat_beauty">Красота</string>
+    <string name="cat_transport">Транспорт</string>
+    <string name="cat_entertainment">Развлечения</string>
+    <string name="cat_home_repair">ДомРемонт</string>
+    <string name="cat_train_tickets">Ждбилеты</string>
+    <string name="cat_clothes">Одежда</string>
+</resources>

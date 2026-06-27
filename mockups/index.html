@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1500, initial-scale=1">
+  <title>Кэшбэк — макеты</title>
+  <style>
+    :root {
+      --bg: #f3f3f5;
+      --surface: #ffffff;
+      --on-surface: #1c1b1f;
+      --on-surface-variant: #49454e;
+      --outline: #cac4d0;
+      --primary: #6750a4;
+      --on-primary: #ffffff;
+      --error: #b3261e;
+    }
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #e7e7ea;
+      font-family: 'Inter','Roboto','Segoe UI',system-ui,sans-serif;
+      color: var(--on-surface);
+    }
+    .board {
+      padding: 32px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px 24px;
+      max-width: 1700px;
+      margin: 0 auto;
+    }
+    .board h1 {
+      grid-column: 1 / -1;
+      font-size: 28px;
+      font-weight: 600;
+      margin: 0 0 4px;
+      letter-spacing: -0.02em;
+    }
+    .board .subtitle {
+      grid-column: 1 / -1;
+      color: #555;
+      margin: 0 0 12px;
+      font-size: 14px;
+    }
+    .phone {
+      width: 360px;
+      height: 800px;
+      background: var(--bg);
+      border-radius: 36px;
+      box-shadow:
+        0 0 0 10px #1a1a1d,
+        0 16px 40px rgba(0,0,0,0.18);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      margin: 0 auto;
+    }
+    .phone-label {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      color: #444;
+      margin-top: 14px;
+      letter-spacing: 0.01em;
+    }
+    .statusbar { height: 28px; display: flex; justify-content: space-between; align-items: center; padding: 4px 18px 0; font-size: 13px; font-weight: 600; }
+    .statusbar .right { display: flex; gap: 6px; align-items: center; font-size: 11px; }
+    .appbar { height: 56px; padding: 0 16px; display: flex; align-items: center; gap: 12px; background: var(--surface); border-bottom: 1px solid #ececef; }
+    .appbar.tinted { border-bottom: none; }
+    .appbar h2 { font-size: 20px; font-weight: 500; margin: 0; flex: 1; letter-spacing: -0.01em; }
+    .appbar .icon-btn { width: 40px; height: 40px; border-radius: 20px; display: grid; place-items: center; cursor: pointer; }
+    .content { flex: 1; overflow: hidden; padding: 16px; }
+    .content.no-pad { padding: 0; }
+    .bottomnav { height: 76px; background: #fff; display: flex; border-top: 1px solid #ececef; padding-top: 8px; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; color: var(--on-surface-variant); padding-top: 4px; }
+    .nav-item .pill { width: 56px; height: 28px; border-radius: 14px; display: grid; place-items: center; }
+    .nav-item.active .pill { background: #e8def8; color: var(--primary); }
+    .nav-item.active { color: var(--on-surface); font-weight: 500; }
+    .nav-item .icon { font-size: 20px; line-height: 1; }
+
+    /* banks grid */
+    .bank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .bank-card { aspect-ratio: 1 / 1; border-radius: 20px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; color: #fff; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.18); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .bank-card.gray { color: #111; text-shadow: none; }
+    .bank-card .count { font-size: 12px; font-weight: 500; opacity: 0.85; letter-spacing: 0.02em; }
+    .bank-card .name { font-size: 17px; letter-spacing: -0.01em; line-height: 1.15; }
+
+    /* bank detail */
+    .bank-header { padding: 20px 20px 24px; color: #fff; }
+    .bank-header.gray { color: #111; }
+    .bank-header .label { font-size: 12px; opacity: 0.85; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .bank-header h3 { margin: 0; font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
+    .bank-header .month { margin-top: 14px; font-size: 13px; opacity: 0.9; }
+    .entry-list { padding: 8px 0; }
+    .entry { padding: 12px 20px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid #ececef; background: var(--surface); }
+    .entry .emoji { font-size: 20px; line-height: 1; width: 28px; text-align: center; }
+    .entry .name { flex: 1; font-size: 14px; }
+    .entry .pct { font-size: 17px; font-weight: 700; color: var(--primary); letter-spacing: -0.01em; }
+    .empty { padding: 60px 20px; text-align: center; color: var(--on-surface-variant); font-size: 14px; }
+    .empty .ico { font-size: 36px; opacity: 0.5; display: block; margin-bottom: 8px; }
+
+    .fab { position: absolute; right: 20px; bottom: 96px; width: 56px; height: 56px; border-radius: 18px; background: #e8def8; color: var(--primary); display: grid; place-items: center; font-size: 26px; box-shadow: 0 4px 12px rgba(0,0,0,0.16); z-index: 10; }
+
+    /* categories list */
+    .cat-list { display: flex; flex-direction: column; gap: 6px; }
+    .cat-row { background: var(--surface); border-radius: 14px; padding: 11px 14px; display: flex; align-items: center; gap: 12px; }
+    .cat-row .emoji { font-size: 21px; width: 30px; text-align: center; }
+    .cat-row .name { flex: 1; font-size: 14px; font-weight: 500; }
+    .cat-row .name .sub { display: block; font-size: 11px; color: var(--on-surface-variant); font-weight: 400; margin-top: 1px; }
+    .cat-row .bank-chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px 3px 5px; border-radius: 10px; font-size: 11px; font-weight: 600; color: #fff; text-shadow: 0 1px 1px rgba(0,0,0,0.15); }
+    .cat-row .bank-chip.gray { color: #111; text-shadow: none; }
+    .cat-row .bank-chip .dot { width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.4); }
+    .cat-row .pct { font-size: 16px; font-weight: 700; color: var(--primary); margin-left: 6px; }
+
+    /* category detail ranked list */
+    .rank-row { background: var(--surface); border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .rank-row .rank-num { width: 24px; height: 24px; border-radius: 12px; background: #ececef; display: grid; place-items: center; font-size: 12px; font-weight: 600; color: var(--on-surface-variant); }
+    .rank-row .bank-swatch { width: 36px; height: 36px; border-radius: 10px; }
+    .rank-row .name { flex: 1; font-size: 15px; font-weight: 500; }
+    .rank-row .pct { font-size: 18px; font-weight: 700; color: var(--primary); }
+
+    /* history */
+    .history-pick { display: flex; align-items: center; gap: 6px; padding: 12px 16px; background: var(--surface); border-bottom: 1px solid #ececef; }
+    .history-pick .chev { width: 32px; height: 32px; border-radius: 16px; display: grid; place-items: center; cursor: pointer; color: var(--on-surface); }
+    .history-pick .month { flex: 1; text-align: center; font-size: 16px; font-weight: 500; letter-spacing: -0.005em; }
+    .history-pick .today { font-size: 12px; padding: 4px 10px; border-radius: 14px; background: #e8def8; color: var(--primary); font-weight: 600; }
+    .history-section .head { padding: 10px 16px; color: #fff; font-size: 13px; font-weight: 600; text-shadow: 0 1px 1px rgba(0,0,0,0.15); letter-spacing: 0.01em; }
+    .history-section .head.gray { color: #111; text-shadow: none; }
+
+    /* dialog */
+    .dim-bg { position: absolute; background: rgba(0,0,0,0.35); }
+    .dialog { position: absolute; left: 18px; right: 18px; top: 50%; transform: translateY(-50%); background: var(--surface); border-radius: 28px; padding: 24px; box-shadow: 0 12px 40px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 14px; max-height: 92%; }
+    .dialog h3 { margin: 0; font-size: 22px; font-weight: 500; letter-spacing: -0.01em; }
+    .field { background: #fcfcfd; border: 1px solid var(--outline); border-radius: 8px; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; position: relative; }
+    .field .lbl { font-size: 11px; color: var(--on-surface-variant); font-weight: 500; }
+    .field .val { font-size: 15px; }
+    .field .val.placeholder { color: var(--on-surface-variant); }
+    .field .chev { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--on-surface-variant); font-size: 18px; }
+    .field .hint { font-size: 11px; color: var(--on-surface-variant); margin-top: 2px; }
+    .preview-line { font-size: 14px; color: var(--on-surface-variant); padding: 4px 4px 0; }
+    .preview-line .em { color: var(--on-surface); font-weight: 600; }
+    .dialog-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
+    .btn-text { padding: 10px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; color: var(--primary); cursor: pointer; }
+    .btn-text.disabled { color: #c5c0d0; cursor: not-allowed; }
+
+    .delete-row { padding: 18px 20px; display: flex; align-items: center; gap: 12px; color: var(--error); font-size: 15px; font-weight: 500; border-top: 1px solid #ececef; background: var(--surface); margin-top: 20px; }
+
+    .group-banner { grid-column: 1 / -1; margin: 20px 0 0; padding: 8px 12px; background: #fff; border-radius: 8px; font-size: 14px; font-weight: 600; color: #555; border-left: 4px solid var(--primary); }
+
+    /* promo cards (Кэшбэк+) */
+    .promo-card { border-radius: 20px; padding: 18px; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.18); box-shadow: 0 2px 12px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; cursor: pointer; }
+    .promo-card.gray { color: #111; text-shadow: none; }
+    .promo-card .pt { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+    .promo-card .ps { font-size: 13px; opacity: 0.92; }
+    .promo-card .cta { font-size: 13px; font-weight: 500; margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+    .promo-band { padding: 18px 20px 22px; color: #fff; }
+    .promo-band.gray { color: #111; }
+    .promo-band .lbl { font-size: 11px; opacity: 0.85; letter-spacing: 0.08em; font-weight: 500; }
+    .promo-band .sub { font-size: 17px; font-weight: 500; margin-top: 6px; }
+    .promo-body { padding: 20px; background: #fff; flex: 1; }
+    .promo-body h4 { font-size: 13px; color: var(--on-surface-variant); margin: 0 0 10px; font-weight: 600; }
+    .promo-body .body { font-size: 14px; line-height: 1.5; white-space: pre-line; color: var(--on-surface); margin-bottom: 18px; }
+    .promo-body .open-btn { display: block; width: 100%; text-align: center; padding: 12px 0; border-radius: 14px; color: #fff; font-weight: 600; font-size: 14px; }
+    .promo-body .open-btn.gray { color: #111; }
+    .promo-body .url { font-size: 11px; color: var(--on-surface-variant); margin-top: 10px; word-break: break-all; }
+  </style>
+</head>
+<body>
+
+<div class="board">
+
+  <h1>Кэшбэк — макеты экранов (v2 — 14 категорий, Кэшбэк+)</h1>
+  <p class="subtitle">Семь карт-сидов: Альфа, Т-Банк, ОТП, Ozon, Ya.weather, Ya.tvprofi, Ya.weather2 (последние три — тёмно-розовые). Четыре вкладки внизу: Банки, По категориям, История, Кэшбэк+.</p>
+
+  <div class="group-banner">Главные вкладки</div>
+
+  <!-- ===== Banks tab ===== -->
+  <div>
+    <div class="phone-label">Банки</div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="right">●●● 100%</span></div>
+      <div class="appbar"><h2>Банки</h2></div>
+      <div class="content" style="overflow-y:auto;">
+        <div class="bank-grid">
+          <div class="bank-card" style="background:#EF3124"><span class="count">2 кэшбэка</span><span class="name">Альфа</span></div>
+          <div class="bank-card gray" style="background:#FFDD2D"><span class="count">2 кэшбэка</span><span class="name">Т-Банк</span></div>
+          <div class="bank-card" style="background:#00FA80; color:#0a3b22; text-shadow:none;"><span class="count">1 кэшбэк</span><span class="name">ОТП</span></div>
+          <div class="bank-card" style="background:#005BFF"><span class="count">1 кэшбэк</span><span class="name">Ozon</span></div>
+          <div class="bank-card" style="background:#FF1493"><span class="count">1 кэшбэк</span><span class="name">Ya.weather</span></div>
+          <div class="bank-card" style="background:#FF1493"><span class="count">Нет активных</span><span class="name">Ya.tvprofi</span></div>
+          <div class="bank-card" style="background:#FF1493"><span class="count">Нет активных</span><span class="name">Ya.weather2</span></div>
+        </div>
+      </div>
+      <div class="bottomnav">
+        <div class="nav-item active"><div class="pill"><span class="icon">🏦</span></div><span>Банки</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🏷️</span></div><span>Категории</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🕓</span></div><span>История</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🎁</span></div><span>Кэшбэк+</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Categories tab ===== -->
+  <div>
+    <div class="phone-label">По категориям (14 встроенных)</div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="right">●●● 100%</span></div>
+      <div class="appbar"><h2>Категории</h2></div>
+      <div class="content" style="overflow-y:auto;">
+        <div class="cat-list">
+          <div class="cat-row"><span class="emoji">🎓</span><span class="name">Образование<span class="sub">нет активных предложений</span></span><span class="bank-chip gray" style="background:#eee; color:#888;">—</span></div>
+          <div class="cat-row"><span class="emoji">🛒</span><span class="name">Супермаркеты<span class="sub">лучшее предложение в мае</span></span><span class="bank-chip" style="background:#EF3124"><span class="dot"></span>Альфа</span><span class="pct">5%</span></div>
+          <div class="cat-row"><span class="emoji">💳</span><span class="name">Все покупки<span class="sub">лучшее предложение в мае</span></span><span class="bank-chip" style="background:#005BFF"><span class="dot"></span>Ozon</span><span class="pct">3%</span></div>
+          <div class="cat-row"><span class="emoji">🍔</span><span class="name">Фастфуд<span class="sub">лучшее предложение в мае</span></span><span class="bank-chip gray" style="background:#FFDD2D"><span class="dot" style="background:#00000022"></span>Т-Банк</span><span class="pct">5%</span></div>
+          <div class="cat-row"><span class="emoji">🍽</span><span class="name">Рестораны<span class="sub">лучшее предложение в мае</span></span><span class="bank-chip" style="background:#EF3124"><span class="dot"></span>Альфа</span><span class="pct">10%</span></div>
+          <div class="cat-row"><span class="emoji">📚</span><span class="name">Книги<span class="sub">нет активных предложений</span></span><span class="bank-chip gray" style="background:#eee; color:#888;">—</span></div>
+          <div class="cat-row"><span class="emoji">💊</span><span class="name">Аптеки<span class="sub">лучшее предложение в мае</span></span><span class="bank-chip" style="background:#00FA80; color:#0a3b22; text-shadow:none;"><span class="dot"></span>ОТП</span><span class="pct">3%</span></div>
+          <div class="cat-row"><span class="emoji">⚽</span><span class="name">Спорттовары<span class="sub">нет активных предложений</span></span><span class="bank-chip gray" style="background:#eee; color:#888;">—</span></div>
+          <div class="cat-row"><span class="emoji">🚕</span><span class="name">Такси<span class="sub">лучшее предложение в мае</span></span><span class="bank-chip" style="background:#FF1493"><span class="dot"></span>Ya.weather</span><span class="pct">7%</span></div>
+          <div class="cat-row"><span class="emoji">💄</span><span class="name">Красота<span class="sub">нет активных предложений</span></span><span class="bank-chip gray" style="background:#eee; color:#888;">—</span></div>
+          <div class="cat-row"><span class="emoji">🚌</span><span class="name">Транспорт<span class="sub">нет активных предложений</span></span><span class="bank-chip gray" style="background:#eee; color:#888;">—</span></div>
+          <div class="cat-row"><span class="emoji">🎬</span><span class="name">Развлечения<span class="sub">нет активных предложений</span></span><span class="bank-chip gray" style="background:#eee; color:#888;">—</span></div>
+          <div class="cat-row"><span class="emoji">🔨</span><span class="name">ДомРемонт<span class="sub">нет активных предложений</span></span><span class="bank-chip gray" style="background:#eee; color:#888;">—</span></div>
+          <div class="cat-row"><span class="emoji">🚆</span><span class="name">Ждбилеты<span class="sub">нет активных предложений</span></span><span class="bank-chip gray" style="background:#eee; color:#888;">—</span></div>
+          <div class="cat-row"><span class="emoji">👔</span><span class="name">Одежда<span class="sub">лучшее предложение в мае</span></span><span class="bank-chip" style="background:#005BFF"><span class="dot"></span>Ozon</span><span class="pct">5%</span></div>
+        </div>
+      </div>
+      <div class="bottomnav">
+        <div class="nav-item"><div class="pill"><span class="icon">🏦</span></div><span>Банки</span></div>
+        <div class="nav-item active"><div class="pill"><span class="icon">🏷️</span></div><span>Категории</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🕓</span></div><span>История</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🎁</span></div><span>Кэшбэк+</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== History tab ===== -->
+  <div>
+    <div class="phone-label">История</div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="right">●●● 100%</span></div>
+      <div class="appbar"><h2>История</h2></div>
+      <div class="content no-pad" style="overflow-y:auto;">
+        <div class="history-pick">
+          <div class="chev">‹</div>
+          <div class="month">Май 2026</div>
+          <div class="today">Сегодня</div>
+          <div class="chev">›</div>
+        </div>
+        <div class="history-section">
+          <div class="head" style="background:#EF3124">Альфа</div>
+          <div class="entry"><span class="emoji">🛒</span><span class="name">Супермаркеты</span><span class="pct">5%</span></div>
+          <div class="entry"><span class="emoji">🍽</span><span class="name">Рестораны</span><span class="pct">10%</span></div>
+        </div>
+        <div class="history-section">
+          <div class="head gray" style="background:#FFDD2D">Т-Банк</div>
+          <div class="entry"><span class="emoji">💳</span><span class="name">Все покупки</span><span class="pct">1%</span></div>
+          <div class="entry"><span class="emoji">🍔</span><span class="name">Фастфуд</span><span class="pct">5%</span></div>
+        </div>
+        <div class="history-section">
+          <div class="head" style="background:#00FA80; color:#0a3b22; text-shadow:none;">ОТП</div>
+          <div class="entry"><span class="emoji">💊</span><span class="name">Аптеки</span><span class="pct">3%</span></div>
+        </div>
+        <div class="history-section">
+          <div class="head" style="background:#005BFF">Ozon</div>
+          <div class="entry"><span class="emoji">💳</span><span class="name">Все покупки</span><span class="pct">3%</span></div>
+        </div>
+        <div class="history-section">
+          <div class="head" style="background:#FF1493">Ya.weather</div>
+          <div class="entry"><span class="emoji">🚕</span><span class="name">Такси</span><span class="pct">7%</span></div>
+        </div>
+      </div>
+      <div class="bottomnav">
+        <div class="nav-item"><div class="pill"><span class="icon">🏦</span></div><span>Банки</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🏷️</span></div><span>Категории</span></div>
+        <div class="nav-item active"><div class="pill"><span class="icon">🕓</span></div><span>История</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🎁</span></div><span>Кэшбэк+</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== NEW: Кэшбэк+ list ===== -->
+  <div>
+    <div class="phone-label">Кэшбэк+ (новая вкладка)</div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="right">●●● 100%</span></div>
+      <div class="appbar"><h2>Кэшбэк+</h2></div>
+      <div class="content" style="overflow-y:auto;">
+        <div style="font-size:12px; color:var(--on-surface-variant); margin-bottom:12px; line-height:1.4;">Подборка карт, на которые сейчас есть промо-условия открытия. Откройте карточку, чтобы прочитать условия и перейти на сайт банка.</div>
+        <div class="promo-card" style="background:#EF3124">
+          <div class="pt">Альфа-Банк</div>
+          <div class="ps">Бесплатное обслуживание + кэшбэк до 5%</div>
+          <div class="cta">Подробнее →</div>
+        </div>
+        <div class="promo-card gray" style="background:#FFDD2D">
+          <div class="pt">Т-Банк (Tinkoff Black)</div>
+          <div class="ps">До 30% кэшбэка и 16% на остаток</div>
+          <div class="cta">Подробнее →</div>
+        </div>
+        <div class="promo-card" style="background:#005BFF">
+          <div class="pt">Ozon Card</div>
+          <div class="ps">До 25% баллами на маркетплейсе</div>
+          <div class="cta">Подробнее →</div>
+        </div>
+      </div>
+      <div class="bottomnav">
+        <div class="nav-item"><div class="pill"><span class="icon">🏦</span></div><span>Банки</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🏷️</span></div><span>Категории</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🕓</span></div><span>История</span></div>
+        <div class="nav-item active"><div class="pill"><span class="icon">🎁</span></div><span>Кэшбэк+</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="group-banner">Детальные экраны</div>
+
+  <!-- ===== Bank detail — pink ===== -->
+  <div>
+    <div class="phone-label">Банк (детально) — Ya.weather</div>
+    <div class="phone">
+      <div class="statusbar" style="background:#FF1493; color:#fff"><span>9:41</span><span class="right">●●● 100%</span></div>
+      <div class="appbar tinted" style="background:#FF1493; color:#fff">
+        <div class="icon-btn" style="color:#fff">‹</div>
+        <h2 style="color:#fff">Ya.weather</h2>
+      </div>
+      <div class="bank-header" style="background:#FF1493">
+        <div class="label">Май 2026</div>
+        <h3>1 активный кэшбэк</h3>
+        <div class="month">Категории, по которым в этом месяце даёт повышенный кэшбэк</div>
+      </div>
+      <div class="entry-list" style="background:#fff;">
+        <div class="entry"><span class="emoji">🚕</span><span class="name">Такси</span><span class="pct">7%</span></div>
+      </div>
+      <div style="flex:1; background:#fff;"></div>
+      <div class="fab">＋</div>
+      <div class="bottomnav">
+        <div class="nav-item active"><div class="pill"><span class="icon">🏦</span></div><span>Банки</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🏷️</span></div><span>Категории</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🕓</span></div><span>История</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🎁</span></div><span>Кэшбэк+</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Category detail — Ждбилеты ===== -->
+  <div>
+    <div class="phone-label">Категория (детально) — Ждбилеты</div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="right">●●● 100%</span></div>
+      <div class="appbar">
+        <div class="icon-btn">‹</div>
+        <h2>🚆 Ждбилеты</h2>
+      </div>
+      <div class="content" style="overflow-y:auto;">
+        <div style="font-size:13px; color:var(--on-surface-variant); margin-bottom:12px;">Где лучший кэшбэк в мае 2026</div>
+        <div class="rank-row">
+          <span class="rank-num">1</span>
+          <div class="bank-swatch" style="background:#005BFF"></div>
+          <span class="name">Ozon</span>
+          <span class="pct">12%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-num">2</span>
+          <div class="bank-swatch" style="background:#FF1493"></div>
+          <span class="name">Ya.weather</span>
+          <span class="pct">5%</span>
+        </div>
+      </div>
+      <div class="bottomnav">
+        <div class="nav-item"><div class="pill"><span class="icon">🏦</span></div><span>Банки</span></div>
+        <div class="nav-item active"><div class="pill"><span class="icon">🏷️</span></div><span>Категории</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🕓</span></div><span>История</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🎁</span></div><span>Кэшбэк+</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Custom category w/ delete ===== -->
+  <div>
+    <div class="phone-label">Пользовательская категория (с удалением)</div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="right">●●● 100%</span></div>
+      <div class="appbar">
+        <div class="icon-btn">‹</div>
+        <h2>⛽ АЗС</h2>
+      </div>
+      <div class="content" style="overflow-y:auto;">
+        <div style="font-size:13px; color:var(--on-surface-variant); margin-bottom:12px;">Где лучший кэшбэк в мае 2026</div>
+        <div class="rank-row">
+          <span class="rank-num">1</span>
+          <div class="bank-swatch" style="background:#005BFF"></div>
+          <span class="name">Ozon</span>
+          <span class="pct">7%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-num">2</span>
+          <div class="bank-swatch" style="background:#EF3124"></div>
+          <span class="name">Альфа</span>
+          <span class="pct">3%</span>
+        </div>
+        <div class="delete-row">
+          <span style="font-size:20px">🗑</span>
+          Удалить категорию «АЗС»
+        </div>
+        <div style="font-size:11px; color:var(--on-surface-variant); padding:10px 20px;">Будут удалены все привязанные к ней кэшбэки за все месяцы.</div>
+      </div>
+      <div class="bottomnav">
+        <div class="nav-item"><div class="pill"><span class="icon">🏦</span></div><span>Банки</span></div>
+        <div class="nav-item active"><div class="pill"><span class="icon">🏷️</span></div><span>Категории</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🕓</span></div><span>История</span></div>
+        <div class="nav-item"><div class="pill"><span class="icon">🎁</span></div><span>Кэшбэк+</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== NEW: Promo detail screen ===== -->
+  <div>
+    <div class="phone-label">Кэшбэк+ — детально (Альфа-Банк)</div>
+    <div class="phone">
+      <div class="statusbar" style="background:#EF3124; color:#fff"><span>9:41</span><span class="right">●●● 100%</span></div>
+      <div class="appbar tinted" style="background:#EF3124; color:#fff">
+        <div class="icon-btn" style="color:#fff">‹</div>
+        <h2 style="color:#fff">Альфа-Банк</h2>
+      </div>
+      <div class="promo-band" style="background:#EF3124">
+        <div class="lbl">КЭШБЭК+</div>
+        <div class="sub">Бесплатное обслуживание + кэшбэк до 5%</div>
+      </div>
+      <div class="promo-body">
+        <h4>Условия и преимущества</h4>
+        <div class="body">• Бесплатная карта при покупках от 10 000 ₽/мес
+• Кэшбэк до 5% в выбранных категориях
+• До 25% у партнёров
+• Снятие наличных без комиссии в любых банкоматах
+
+Официальные условия и оформление — на сайте Альфа-Банка.</div>
+        <div class="open-btn" style="background:#EF3124">⇗  Открыть на сайте банка</div>
+        <div class="url">https://alfabank.ru/get-money/debit-cards/alfa-card/</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="group-banner">Диалоги</div>
+
+  <!-- ===== Add cashback dialog ===== -->
+  <div>
+    <div class="phone-label">Диалог «Добавить кэшбэк»</div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="right">●●● 100%</span></div>
+      <div class="appbar" style="filter:brightness(0.7)"><h2>Альфа</h2></div>
+      <div class="content" style="filter:brightness(0.7)"></div>
+      <div class="dim-bg" style="inset:28px 0 0;"></div>
+      <div class="dialog">
+        <h3>Добавить кэшбэк</h3>
+        <div class="field">
+          <span class="lbl">Банк</span>
+          <span class="val">Альфа</span>
+          <span class="chev">▾</span>
+        </div>
+        <div class="field">
+          <span class="lbl">Категория</span>
+          <span class="val">🚆 Ждбилеты</span>
+          <span class="chev">▾</span>
+        </div>
+        <div class="field">
+          <span class="lbl">Процент</span>
+          <span class="val">5,5</span>
+          <span class="hint">Можно указывать дробное число, например 5,5</span>
+        </div>
+        <div class="dialog-actions">
+          <span class="btn-text" style="color:var(--on-surface-variant)">Отмена</span>
+          <span class="btn-text">Добавить</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== New category dialog ===== -->
+  <div>
+    <div class="phone-label">Диалог «Новая категория»</div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="right">●●● 100%</span></div>
+      <div class="appbar" style="filter:brightness(0.7)"><h2>Альфа</h2></div>
+      <div class="content" style="filter:brightness(0.7)"></div>
+      <div class="dim-bg" style="inset:28px 0 0;"></div>
+      <div class="dialog">
+        <h3>Новая категория</h3>
+        <div class="field">
+          <span class="lbl">Название</span>
+          <span class="val">АЗС</span>
+        </div>
+        <div class="field">
+          <span class="lbl">Эмодзи</span>
+          <span class="val">⛽</span>
+          <span class="hint">Откройте клавиатуру эмодзи и вставьте любой символ</span>
+        </div>
+        <div class="preview-line">Будет показано: <span class="em">⛽ АЗС</span></div>
+        <div class="dialog-actions">
+          <span class="btn-text" style="color:var(--on-surface-variant)">Отмена</span>
+          <span class="btn-text">Создать</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

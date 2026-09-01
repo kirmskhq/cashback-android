@@ -28,7 +28,7 @@ Android-приложение, которое помнит, какая карта
 
 Kotlin 2.0.21 · Jetpack Compose (BOM 2024.10.01) · Material 3 · Navigation Compose · Room 2.6.1 + KSP · AGP 8.7.0 · Gradle 8.10.2 · JDK 17.
 
-`minSdk 26` · `targetSdk 35` · `applicationId com.mo.cashback` · версия 1.2.0 (versionCode 3).
+`minSdk 26` · `targetSdk 35` · `applicationId com.mo.cashback` · версия 1.2.1 (versionCode 4).
 
 Архитектура — однослойная MVVM: экраны на Compose, по `ViewModel` на экран, единый `CashbackRepository` поверх четырёх DAO. База — синглтон, репозиторий живёт в `CashbackApplication`; DI-фреймворка нет.
 
@@ -114,7 +114,7 @@ Fully offline: no accounts, no network, no analytics. Everything lives in a loca
 
 Kotlin 2.0.21 · Jetpack Compose (BOM 2024.10.01) · Material 3 · Navigation Compose · Room 2.6.1 + KSP · AGP 8.7.0 · Gradle 8.10.2 · JDK 17.
 
-`minSdk 26` · `targetSdk 35` · `applicationId com.mo.cashback` · version 1.2.0 (versionCode 3).
+`minSdk 26` · `targetSdk 35` · `applicationId com.mo.cashback` · version 1.2.1 (versionCode 4).
 
 Architecture is flat MVVM: Compose screens, one `ViewModel` per screen, a single `CashbackRepository` over four DAOs. The database is a singleton and the repository lives on `CashbackApplication`; there is no DI framework.
 

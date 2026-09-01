@@ -37,8 +37,7 @@ abstract class AppDatabase : RoomDatabase() {
                 AppDatabase::class.java,
                 "cashback.db",
             )
-                .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
-                .fallbackToDestructiveMigration()
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                 .addCallback(object : Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
@@ -57,11 +56,37 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         /**
-         * v3 → v4: add isBuiltIn / isSelected / sortOrder columns to banks table.
-         * Existing rows: mark as selected (preserve user's setup); flag the 3 Ya.* labels
-         * as custom (isBuiltIn = 0) since they were never real catalog banks.
-         * Then insert the 11 new catalog banks at sortOrders 1..15.
+         * v1 → v2: add the promos table (Кэшбэк+ tab) and fill it with the seed offers.
+         * Seeding otherwise only runs in onCreate, so without this INSERT an upgraded
+         * install would land on an empty Кэшбэк+ tab.
          */
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `promos` (" +
+                        "`id` TEXT NOT NULL, `title` TEXT NOT NULL, `subtitle` TEXT NOT NULL, " +
+                        "`benefits` TEXT NOT NULL, `url` TEXT NOT NULL, `accentHex` TEXT NOT NULL, " +
+                        "`sortOrder` INTEGER NOT NULL, PRIMARY KEY(`id`))"
+                )
+                seedPromos.forEach { p ->
+                    db.execSQL(
+                        "INSERT OR IGNORE INTO promos (id, title, subtitle, benefits, url, accentHex, sortOrder) " +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                        arrayOf(p.id, p.title, p.subtitle, p.benefits, p.url, p.accentHex, p.sortOrder),
+                    )
+                }
+            }
+        }
+
+        /**
+         * v2 → v3: no schema change — the version was bumped for a seed-data change only
+         * (schemas/2.json and schemas/3.json are identical apart from version and hash).
+         * The migration still has to exist, or Room cannot walk a v2 database up to v5.
+         */
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) = Unit
+        }
+
         /** v4 → v5: insert Яндекс Банк, bump ОТП/Ozon/Юmoney sortOrder by 1. */
         private val MIGRATION_4_5 = object : Migration(4, 5) {
             override fun migrate(db: SupportSQLiteDatabase) {
@@ -74,6 +99,12 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        /**
+         * v3 → v4: add isBuiltIn / isSelected / sortOrder columns to the banks table.
+         * Existing rows: mark as selected (preserve the user's setup); flag the 3 Ya.* labels
+         * as custom (isBuiltIn = 0) since they were never real catalog banks.
+         * Then insert the 11 new catalog banks at sortOrders 1..15.
+         */
         private val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE banks ADD COLUMN isBuiltIn INTEGER NOT NULL DEFAULT 1")

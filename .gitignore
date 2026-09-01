@@ -1,0 +1,31 @@
+# Gradle / Kotlin
+.gradle/
+.kotlin/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Android build output
+*.apk
+*.aab
+*.ap_
+*.dex
+release/
+.cxx/
+captures/
+
+# Machine-specific configuration
+local.properties
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Logs and scratch files
+*.log
+.yes.txt
+
+# OS
+.DS_Store
+Thumbs.db

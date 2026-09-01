@@ -91,3 +91,25 @@ class ReminderReceiver : BroadcastReceiver() {
         Reminders.scheduleNext(context)
     }
 }
+
+/**
+ * Re-arms the monthly reminder after a reboot or an app update.
+ *
+ * AlarmManager drops every pending alarm when the device restarts, and [ReminderReceiver]
+ * only re-arms itself once it has already fired. Without this receiver a single reboot would
+ * silently cancel the reminder until the user happened to open the app again.
+ *
+ * Both actions are protected broadcasts — only the system can send them — so the manifest
+ * entry is safe to export.
+ */
+class BootCompletedReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        when (intent.action) {
+            Intent.ACTION_BOOT_COMPLETED,
+            Intent.ACTION_MY_PACKAGE_REPLACED -> {
+                Reminders.ensureChannel(context)
+                Reminders.scheduleNext(context)
+            }
+        }
+    }
+}

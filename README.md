@@ -42,6 +42,14 @@ Kotlin 2.0.21 · Jetpack Compose (BOM 2024.10.01) · Material 3 · Navigation Co
 
 APK окажется в `app/build/outputs/apk/debug/app-debug.apk` — приложение ставится сайдлоадом, в Google Play его нет.
 
+### Тесты
+
+```bash
+./gradlew testDebugUnitTest
+```
+
+Юнит-тесты покрывают расчёт даты ежемесячного напоминания (`Reminders.nextFireTimeMillis`) — переход через границу месяца и года и откат на последний день короткого февраля.
+
 ### Данные
 
 Room, схема версии 5, экспорт в `app/schemas/`. Четыре таблицы:
@@ -53,7 +61,9 @@ Room, схема версии 5, экспорт в `app/schemas/`. Четыре 
 | `entries` | процент кэшбэка: банк × категория × год × месяц (уникальный индекс) |
 | `promos` | карточки вкладки Кэшбэк+ |
 
-Удаление банка или категории каскадом удаляет связанные записи. Заполнение каталога происходит один раз при создании базы, новые банки доезжают миграциями (`MIGRATION_3_4`, `MIGRATION_4_5`).
+Удаление банка или категории каскадом удаляет связанные записи. Каталог заполняется один раз при создании базы, новые банки доезжают миграциями.
+
+Цепочка миграций полная — 1 → 2 → 3 → 4 → 5, — и destructive fallback отключён намеренно: обновление приложения не имеет права молча стереть данные пользователя.
 
 ### Структура
 
@@ -70,18 +80,16 @@ app/src/main/java/com/mo/cashback/
 │   ├── component/   общие элементы (топ-бар, хелперы)
 │   ├── navigation/  AppNav — нижние вкладки и маршруты
 │   └── theme/       цвета, типографика, тема Material 3
-└── util/        Reminders — ежемесячное напоминание
-mockups/index.html   HTML-макеты всех экранов
-CHANGELOG.md         журнал изменений по версиям
+└── util/        Reminders — ежемесячное напоминание и перевзвод после перезагрузки
+app/src/test/         юнит-тесты (JVM, без эмулятора)
+app/schemas/          экспортированные схемы Room, версии 1–5
+mockups/index.html    HTML-макеты всех экранов
+CHANGELOG.md          журнал изменений по версиям
 ```
 
 ### Язык интерфейса
 
 Интерфейс только на русском: локаль принудительно выставляется в `MainActivity.attachBaseContext`, системный язык устройства игнорируется.
-
-### Замечания по репозиторию
-
-В репозиторий попали артефакты сборки (`app/build/`, `.gradle/`, `app-debug.apk`, `.build*.log`) — `.gitignore` пока нет. При клонировании их можно смело удалять, на сборку они не влияют.
 
 ---
 
@@ -120,6 +128,14 @@ Requires the Android SDK and JDK 17. Point `local.properties` at your SDK (`sdk.
 
 The APK lands in `app/build/outputs/apk/debug/app-debug.apk`. The app is sideloaded — it is not on Google Play.
 
+### Tests
+
+```bash
+./gradlew testDebugUnitTest
+```
+
+Unit tests cover the monthly reminder's date arithmetic (`Reminders.nextFireTimeMillis`) — month and year rollover, and the fallback to the last day of a short February.
+
 ### Data
 
 Room, schema version 5, exported to `app/schemas/`. Four tables:
@@ -131,7 +147,9 @@ Room, schema version 5, exported to `app/schemas/`. Four tables:
 | `entries` | the cashback percentage: bank × category × year × month (unique index) |
 | `promos` | cards for the Cashback+ tab |
 
-Deleting a bank or a category cascades to its entries. The catalog is seeded once on database creation; new banks arrive through migrations (`MIGRATION_3_4`, `MIGRATION_4_5`).
+Deleting a bank or a category cascades to its entries. The catalog is seeded once on database creation; new banks arrive through migrations.
+
+The migration chain is complete — 1 → 2 → 3 → 4 → 5 — and the destructive fallback is deliberately off: an app update is not allowed to silently wipe a user's data.
 
 ### Layout
 
@@ -148,15 +166,13 @@ app/src/main/java/com/mo/cashback/
 │   ├── component/   shared pieces (top bar, helpers)
 │   ├── navigation/  AppNav — bottom tabs and routes
 │   └── theme/       colors, typography, Material 3 theme
-└── util/        Reminders — the monthly notification
-mockups/index.html   HTML mockups of every screen
-CHANGELOG.md         per-version change log
+└── util/        Reminders — the monthly notification and its post-reboot re-arm
+app/src/test/         unit tests (plain JVM, no emulator)
+app/schemas/          exported Room schemas, versions 1–5
+mockups/index.html    HTML mockups of every screen
+CHANGELOG.md          per-version change log
 ```
 
 ### UI language
 
 The interface is Russian only: the locale is forced in `MainActivity.attachBaseContext`, ignoring the device language.
-
-### Repository notes
-
-Build artifacts are currently tracked in git (`app/build/`, `.gradle/`, `app-debug.apk`, `.build*.log`) — there is no `.gitignore` yet. They can be deleted after cloning; the build does not depend on them.
